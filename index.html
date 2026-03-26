@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Valentine day ray ni ta 💖</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body {
+margin: 0;
+height: 100vh;
+display: flex;
+justify-content: center;
+align-items: center;
+background: linear-gradient(135deg, #ff4e8b, #a64bf4);
+font-family: 'Segoe UI', sans-serif;
+color: white;
+text-align: center;
+overflow: hidden;
+}
+
+.card {
+background: rgba(255,255,255,0.15);
+padding: 25px;
+border-radius: 20px;
+width: 90%;
+max-width: 360px;
+box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+}
+
+.cat img {
+width: 140px;
+margin-bottom: 10px;
+transition: width 0.3s ease;
+}
+
+input {
+width: 90%;
+padding: 12px;
+border-radius: 20px;
+border: none;
+font-size: 16px;
+outline: none;
+}
+
+.link-box {
+margin-top: 10px;
+font-size: 14px;
+word-break: break-all;
+}
+
+.buttons {
+margin-top: 25px;
+position: relative;
+height: auto;
+min-height: 150px;
+}
+
+button {
+border: none;
+padding: 14px 26px;
+border-radius: 30px;
+font-size: 15px;
+cursor: pointer;
+transition: 0.3s ease;
+}
+
+/* FIRST PAGE BUTTONS */
+#earlyBtn, #troubleBtn {
+position: static;
+display: block;
+width: 90%;
+margin: 10px auto;
+}
+
+#earlyBtn {
+background: #ffd1e3;
+color: #b1004b;
+}
+
+#troubleBtn {
+background: #ff4e8b;
+color: white;
+}
+
+/* VALENTINE PAGE BUTTONS - UNIQUE IDs */
+#valentineYesBtn {
+background: white;
+color: #ff4e8b;
+left: 50%;
+transform: translateX(-50%) scale(1);
+position: absolute;
+}
+
+#valentineNoBtn {
+background: #ff2e2e;
+color: white;
+top: 75px;
+left: 50%;
+transform: translateX(-50%);
+position: absolute;
+}
+
+#genBtn {
+background: #ffd1e3;
+color: #b1004b;
+position: static;
+margin-top: 10px;
+}
+
+#backBtn {
+background: #ffd1e3;
+color: #b1004b;
+position: static;
+margin-top: 20px;
+padding: 12px 24px;
+border-radius: 30px;
+border: none;
+font-size: 16px;
+cursor: pointer;
+}
+
+.message-popup {
+background: rgba(255,255,255,0.3);
+padding: 10px;
+border-radius: 15px;
+margin-top: 15px;
+font-size: 14px;
+animation: fadeInOut 2s ease;
+}
+
+@keyframes fadeInOut {
+0% { opacity: 0; }
+20% { opacity: 1; }
+80% { opacity: 1; }
+100% { opacity: 0; }
+}
+
+.confetti {
+position: fixed;
+width: 8px;
+height: 8px;
+animation: fall 3s linear forwards;
+}
+
+@keyframes fall {
+from { transform: translateY(-10vh) rotate(0deg); }
+to { transform: translateY(110vh) rotate(720deg); }
+}
+</style>
+</head>
+
+<body>
+
+<!-- ===== PAGE 1: HAPPY VALENTINE'S DAY ===== -->
+<div class="card" id="firstPage">
+<div class="cat">
+<img id="firstPageCatImg" src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExeXl1OWhlM3FnOHkyMGV1eXZyMmtpbG90aTdvYmY4emt4Z2RzcDVrcSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3oz8xFyn0emm4qvvAA/giphy.gif" style="width: 300px">
+</div>
+
+<h1 id="firstPageQuestion">Happy Valentine's Day! 🥰❤️</h1>
+
+<!-- Message popup container -->
+<div id="messagePopup" class="message-popup" style="display: none;"></div>
+
+<div class="buttons">
+<button id="earlyBtn" onclick="earlyClicked()">Any new k drama? 📺</button>
+<button id="troubleBtn" onclick="troublePageClicked()">You probably dont wanna click this 😈</button>
+</div>
+</div>
+
+<!-- ===== PAGE 2: VALENTINE QUESTION (ONLY ONE PAGE!) ===== -->
+<div class="card" id="valentinePage" style="display: none;">
+<div class="cat">
+<img id="valentineCatImg" src="https://media.giphy.com/media/mlvseq9yvZhba/giphy.gif">
+</div>
+
+<h1 id="valentineQuestion">Will you be my Valentine, Shameta? 💖</h1>
+
+<div class="buttons">
+<button id="valentineYesBtn" onclick="valentineYesClicked()">❤️ Yes</button>
+<button id="valentineNoBtn" onclick="valentineNoClicked()">❌ No</button>
+</div>
+</div>
+
+<!-- REMOVED THE DUPLICATE PAGE! Now only one Valentine page exists -->
+
+<audio id="heartBreak" src="https://assets.mixkit.co/sfx/preview/mixkit-cartoon-crying-heart-break-1116.mp3"></audio>
+<audio id="loveMusic" src="https://assets.mixkit.co/music/preview/mixkit-happy-love-song-493.mp3"></audio>
+
+<script>
+let wifeName = "My Love";
+let noCount = 0;
+let yesScale = 1;
+
+/* ===== INIT ===== */
+document.addEventListener("DOMContentLoaded", () => {
+const params = new URLSearchParams(window.location.search);
+const nameFromUrl = params.get("name");
+
+if (nameFromUrl) {
+applyName(nameFromUrl);
+}
+});
+
+/* ===== APPLY NAME ===== */
+function applyName(name) {
+wifeName = decodeURIComponent(name)
+.trim()
+.replace(/\b\w/g, c => c.toUpperCase());
+
+document.title = `For ${wifeName} 💖`;
+document.getElementById("valentineQuestion").innerText =
+`Will you be my Valentine, ${wifeName}? 💖`;
+}
+
+/* ===== PAGE 1 FUNCTIONS ===== */
+function earlyClicked() {
+// Show a temporary message on the first page
+const messageBox = document.getElementById("messagePopup");
+messageBox.style.display = "block";
+messageBox.innerText = "No new dramas. Fine gonna watch Single's Inferno. Korean Splitsvilla. Let's go";
+    
+// Hide message after 4 seconds
+setTimeout(() => {
+messageBox.style.display = "none";
+}, 4000);
+    
+// Change the cat GIF for fun
+const firstPageCat = document.getElementById("firstPageCatImg");
+firstPageCat.src = "https://i.giphy.com/media/Du0Qi3Mx55BhfrF0AO/giphy.gif";
+firstPageCat.style.width = "200px";
+    
+// Change back after 2 seconds
+setTimeout(() => {
+firstPageCat.src = "https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExeXl1OWhlM3FnOHkyMGV1eXZyMmtpbG90aTdvYmY4emt4Z2RzcDVrcSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3oz8xFyn0emm4qvvAA/giphy.gif";
+firstPageCat.style.width = "300px";
+}, 2000);
+}
+
+function troublePageClicked() {
+// Switch to Valentine page
+document.getElementById("firstPage").style.display = "none";
+document.getElementById("valentinePage").style.display = "block";
+resetValentinePage();
+}
+
+/* ===== PAGE 2 FUNCTIONS (Valentine Page) ===== */
+function resetValentinePage() {
+noCount = 0;
+yesScale = 1;
+document.getElementById("valentineYesBtn").style.transform = `translateX(-50%) scale(1)`;
+document.getElementById("valentineNoBtn").innerText = "❌ No";
+document.getElementById("valentineCatImg").src = "https://i.giphy.com/media/Du0Qi3Mx55BhfrF0AO/giphy.gif";
+document.getElementById("valentineCatImg").style.width = "300px";
+}
+
+function valentineNoClicked() {
+noCount++;
+document.getElementById("heartBreak").play();
+
+yesScale += 0.08;
+document.getElementById("valentineYesBtn").style.transform =
+`translateX(-50%) scale(${yesScale})`;
+
+if (noCount === 2) {
+document.getElementById("valentineNoBtn").innerText = "Please consider this again";
+// ADD YOUR NEW GIF HERE for second click
+document.getElementById("valentineCatImg").src = "https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExYXNndGtlZHIyNGdzb3BlM3dnNzk3M3E3aHRuM3VjcjVkMjRvZG5jdSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/VJiDNMp4qkj1kOskb8/giphy.gif";
+document.getElementById("valentineCatImg").style.width = "280px"; // 
+}
+
+if (noCount === 3) {
+document.getElementById("valentineNoBtn").innerText = "Click  one more time and we are officially done";
+// ADD YOUR NEW GIF HERE for third click
+document.getElementById("valentineCatImg").src = "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExazZ2djJvbXFsb3MxZXRoc3Jsb2llaGEyeGp4aG90NjhzZHhxMDV1eCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/AxQ5yt3s9bRTuEPV9R/giphy.gif";
+document.getElementById("valentineCatImg").style.width = "280px"; // Adjust size as needed
+}
+
+if (noCount === 4) {
+document.getElementById("valentineNoBtn").innerText = "Fine. i give up. I tried but you're too strong ";
+// ADD YOUR NEW "can you not stop" GIF HERE for fourth click
+document.getElementById("valentineCatImg").src = "https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHc0ZDIxZDZweDBpcjUwOWc1dmVoc2Z2dHhnbmFiYjhta3M3ZGpnNCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/iezZGa02IdjPqKQiKl/giphy.gif";
+document.getElementById("valentineCatImg").style.width = "300px";
+
+}
+}
+
+function valentineYesClicked() {
+document.getElementById("loveMusic").play();
+
+// ===== PAGE 3: CELEBRATION PAGE =====
+// Edit this section to customize the final celebration screen
+document.body.innerHTML = `
+<div style="
+display:flex;
+justify-content:center;
+align-items:center;
+flex-direction:column;
+height:100vh;
+background:linear-gradient(135deg,#ff4e8b,#a64bf4);
+color:white;
+text-align:center;
+">
+<h1>Thank You💖</h1>
+<img src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExdTZrcGgxcW53cWhsOXJwcWN5OGpkcW55dTAyYm81bW1lMnU4NjhjbCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/hcGTNgoTLhsq13Mw4m/giphy.gif">
+<p style="margin-top:20px;">Cheers to us. Yeh i am a little dramtic and impatient too, but i promise to grow with you. I will cheer for your dreams, never stop making you feel loved and cherished and of couse we will be watching lots of dramas and create countless meomories together. 📺</p>
+</div>
+`;
+launchConfetti();
+}
+
+function launchConfetti() {
+for (let i = 0; i < 140; i++) {
+const c = document.createElement("div");
+c.className = "confetti";
+c.style.left = Math.random() * 100 + "vw";
+c.style.background = `hsl(${Math.random()*360},100%,70%)`;
+c.style.animationDuration = 2 + Math.random() * 2 + "s";
+document.body.appendChild(c);
+setTimeout(() => c.remove(), 4000);
+}
+}
+
+/* ===== NAME SETUP FUNCTIONS (kept for compatibility) ===== */
+function hideNameSetup() {
+// Not used in this version
+}
+
+function generateLink() {
+// Not used in this version
+}
+</script>
+
+</body>
+</html>
